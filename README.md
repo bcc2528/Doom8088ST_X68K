@@ -1,7 +1,7 @@
 ## Doom8088: X68000 Edition
 ![Doom8088: X68000 Edition](readme_imgs/DOOMX68K.png?raw=true)
 
-[Doom8088ST](https://github.com/FrenkelS/Doom8088ST)をベースにX68000に移植した物です。X68030やそれに準じたアクセラレータが無くともMC68000、メモリ2MBで動きます。
+[Doom8088ST](https://github.com/FrenkelS/Doom8088ST)をベースにX68000に移植した物です。X68030やそれに準じたアクセラレータが無くともMC68000、最低でもメモリ2MBを搭載したX68000で動きます。
 
 ただしMC68000 10MHzでは重いためX68000 XVI(MC68000 16MHz)以上・またはアクセラレータ搭載機を推奨、空きメモリ4MBまでヒープ用メモリを取得するためメモリ6MB以上搭載していればその分ゲーム中の読み込みが軽減され動作が軽くなります。
 
