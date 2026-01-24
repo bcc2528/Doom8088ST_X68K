@@ -1,74 +1,42 @@
-## Doom8088: Motorola 68000 Edition
-![Doom8088: Atari ST Edition](readme_imgs/doomstch.png?raw=true)
+## Doom8088: X68000 Edition
+![Doom8088: X68000 Edition](readme_imgs/DOOMX68K.png?raw=true)
 
-Doom was originally designed in 1993 for 32-bit DOS computers with 4 MB of RAM.
-It's mostly written in C code with very little assembly code.
-It has been ported to all kinds of systems.
-Usually these systems are 32-bit or more and have a flat memory model.
+[Doom8088ST](https://github.com/FrenkelS/Doom8088ST)をベースにX68000に移植した物です。X68030やそれに準じたアクセラレータが無くともMC68000、メモリ2MBで動きます。
 
-Doom8088: Motorola 68000 Edition is a port of Doom for Atari ST, AT&T UNIX PC and Sinclair QL computers with at least 512 kB of RAM (1 MB recommended) and a Motorola 68000, 68008 or 68010 CPU.
-It's based on [Doom8088](https://github.com/FrenkelS/Doom8088), a port of Doom for 16-bit DOS computers.
-Download Doom8088: Motorola 68000 Edition [here](https://github.com/FrenkelS/Doom8088ST/releases).
+ただしMC68000 10MHzでは重いためX68000 XVI(MC68000 16MHz)以上・またはアクセラレータ搭載機を推奨、空きメモリ4MBまでヒープ用メモリを取得するためメモリ6MB以上搭載していればその分ゲーム中の読み込みが軽減され動作が軽くなります。
 
-**What's special?:**
- - Supports only Doom 1 Episode 1
- - Rotating overlaid automap
- - Only demo3 is supported
- - 16 color mode (Atari ST only)
- -  8 color mode (Sinclair QL only)
- -  2 color mode
- - PC speaker like sound effects (Atari ST only)
- - No music
- - No texture mapped floors and ceilings
- - No light diminishing
- - No saving and loading
- - No multiplayer
- - No PWADs
- - No screen resizing
- - No mouse and joystick support
+**仕様**
+ - Doom 1 エピソード1のみプレイ可能
+ - 回転表示されるマップ
+ - demo3のみ再生可能
+ - 256色表示
+ - BEEP音による効果音をFM音源で疑似的に再現
+ - 音楽無し
+ - 床や天井のテクスチャマッピングは非対応
+ - シェーディング表示はなし
+ - セーブ・ロード機能なし
+ - マルチプレイヤーなし
+ - PWAD使用不可
+ - 画面サイズの変更不可
+ - マウスやジョイスティックには非対応
 
-**Known bugs:**
- - When there's not enough memory for a texture, one color is drawn
- - When there's not enough memory for the intermission screen, the last few frames of gameplay are shown instead
+## 操作方法:
+|Action                 |X68000       |
+|-----------------------|-------------|
+|攻撃 / キャンセル       |CTRL         |
+|使用 / 決定             |スペース     |
+|走り                   |SHIFT        |
+|移動                   |矢印キー      |
+|横移動                  |XF3          |
+|左右横移動              |XF1 & XF2    |
+|オートマップ            |TAB          |
+|オートマップズームアウト |+ & -        |
+|オートマップモード切替   |F            |
+|武器変更                |OP.1 & OP.2  |
+|Menu                   |Esc          |
 
-## Supported video modes
-
-### Atari ST 320x200 16 color mode, effective resolution 120x128
-![Doom8088 in 16 colors, high detail](readme_imgs/doomstch.png?raw=true)
-
-### Atari ST 320x200 16 color mode, effective resolution  60x128
-![Doom8088 in 16 colors, medium detail](readme_imgs/doomstcm.png?raw=true)
-
-### Atari ST 320x200 16 color mode, effective resolution  30x128
-![Doom8088 in 16 colors, low detail](readme_imgs/doomstcl.png?raw=true)
-
-### Sinclair QL 256x256 8 color mode, effective resolution 60x128
-![Doom8088 in 8 colors](readme_imgs/doomql8.png?raw=true)
-
-### Atari ST 640x200 and Sinclair QL 512x256 4 color mode, effective resolution 60x128 2 colors
-![Doom8088 in 2 colors](readme_imgs/doomstbw.png?raw=true)
-
-### AT&T UNIX PC 720x348  2 color mode, effective resolution  60x128 2 colors
-![Doom8088 in 2 colors](readme_imgs/doom3b1.png?raw=true)
-
-## Controls:
-|Action                 |Atari ST     |Sinclair QL  |AT&T UNIX PC              |
-|-----------------------|-------------|-------------|--------------------------|
-|Fire                   |Ctrl         |Ctrl         |/                         |
-|Use                    |Enter & Space|Enter & Space|Enter & Space             |
-|Sprint                 |Shift        |Shift        |not available             |
-|Walk                   |Arrow keys   |Arrow keys   |Arrow keys & 8 & 2 & 4 & 6|
-|Strafe                 |Alt          |Alt          |not available             |
-|Strafe left and right  |< & >        |< & >        |< & >                     |
-|Automap                |Tab          |Tabulate     |Tab                       |
-|Automap zoom in and out|+ & -        |+ & -        |+ & -                     |
-|Automap follow mode    |F            |F            |F                         |
-|Weapon up and down     |[ & ]        |[ & ]        |[ & ]                     |
-|Menu                   |Esc          |Esc          |Esc                       |
-|Quit to OS             |F10          |not available|Shift + Q                 |
-
-## Cheats:
-|Code      |Effects                  |Notes                           |
+## チート:
+|コード     |効果                     |メモ                            |
 |----------|-------------------------|--------------------------------|
 |IDCHOPPERS|Chainsaw                 |                                |
 |IDDQD     |God mode                 |                                |
@@ -86,35 +54,15 @@ Download Doom8088: Motorola 68000 Edition [here](https://github.com/FrenkelS/Doo
 |IDROCKET  |Enemy Rockets            |(GoldenEye)                     |
 |IDRATE    |Toggle FPS counter       |Divide by 10 to get the real FPS|
 
-## Command line arguments:
-|Command line argument|Effect               |
+## コマンドラインオプション:
+|コマンドライン        |効果                 |
 |---------------------|---------------------|
-|`-nosfx`             |Disable sound effects|
-|`-nosound`           |Disable sound effects|
-|`-timedemo demo3`    |Run benchmark        |
+|`-nosfx`             |効果音なし            |
+|`-nosound`           |効果音なし            |
+|`-timedemo demo3`    |ベンチマーク起動      |
 
-## Building:
-|Platform     |Platform specific code |Compiler                                                                      |Build script                            |Additional information                              |
-|-------------|-----------------------|------------------------------------------------------------------------------|----------------------------------------|----------------------------------------------------|
-|Atari ST     |`i_ast.c`, `i_astv16.c`|[m68k-atari-mintelf binutils, GCC 14, MiNTLib](https://tho-otto.de/crossmint.php)|`bast16h.sh`, `bast16m.sh`, `bast16l.sh`|320x200 16 color mode, high/medium/low detail mode  |
-|Atari ST     |`i_ast.c`, `i_astv2.c` |[m68k-atari-mintelf binutils, GCC 14, MiNTLib](https://tho-otto.de/crossmint.php)|`bast2.sh`, `bast520.sh`                |640x200  4 color mode, 2 colors are used</br>`DOOM520.TOS` is for computers with 512 kB of RAM. It goes from the first level immediately to the last level.|
-|AT&T UNIX PC |`i_3b1.c`, `i_3b1v.c`  |[unixpc-gcc](https://github.com/mikehaertel/unixpc-gcc)                       |`b3b1.sh`                               |The build script generates `speed.o` and `space.o`. These files need to be linked to create `doom8088`.|
-|Sinclair QL  |`i_ql.c`,  `i_qlv8.c`  |[qdos-gcc](https://github.com/xXorAa/qdos-gcc-2.95.3)                         |`bql8.bat`                              |256x256 8 color mode                                |
-|Sinclair QL  |`i_ql.c`,  `i_qlv2.c`  |[qdos-gcc](https://github.com/xXorAa/qdos-gcc-2.95.3)                         |`bql2.bat`                              |512x256 4 color mode                                |
-|IBM PC 16-bit|`i_ibm.c`, `i_vcgabw.c`|[gcc-ia16](https://github.com/tkchia/gcc-ia16)                                |`bcgabw.sh`                             |See [Doom8088](https://github.com/FrenkelS/Doom8088)|
 
-Doom8088: Motorola 68000 Edition needs an IWAD file that has been preprocessed by [jWadUtil](https://github.com/FrenkelS/jWadUtil).
+## 謝辞
+コンパイルにはSHARP X680x0 シリーズ対応のクロスコンパイル環境[xdev68k](https://github.com/yosshin4004/xdev68k)を利用させて頂きました。
 
-## Porting to other platforms:
-To port Doom8088 to another platform, start by copying `i_dummy.c` and `i_dummyv.c` and see if it compiles.
-Then implement the functions `I_ZoneBase()`, `R_DrawColumnSprite()`, `R_DrawColumnFlat()` and `I_FinishUpdate()`.
-Look at the other platform implementations for inspiration on how to implement these functions.
-Take one of the WAD files from another platform port.
-That should be enough to run the timedemo benchmark.
-
-Implement `V_DrawPatchScaled()` so the game can show the main menu.
-Implement `I_StartTic()` and other keyboard code so the main menu can be navigated and the game can be played.
-
-Implement the other functions in the copy of `i_dummyv.c`.
-
-Optionally implement the sound code and improve the timer code.
+X68000プログラミングでのCRTC・VRAM操作に[x68000 DooM Code](https://sourceforge.net/p/x68000-doom/code/ci/master/tree/)を参考にさせて頂きました。
