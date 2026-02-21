@@ -69,45 +69,27 @@ void I_InitGraphics(void)
 // Keyboard code
 //
 
-/* create a 2d translation table to avoid redefining this one
-   X68XlatTable[0xf][0x8] = ASCII_Scan_Code */
-/* keyboard tab = - */
-uint8_t X68XlatTable[16][8] = { \
-{ 0,88, 2, 3, 4, 5, 6, 7},\
-{ 8, 9,10,11,12,13, 0, 0},\
-{89,16,17,18,19,20,21,22},\
-{23,24,25,14,26, 0,30,31},\
-{32,33,34,35,36,37,38,39},\
-{40,27,44,45,46,47,48,49},\
-{50,51,52,53, 0,84, 0, 0},\
-{91,90, 0,80,81,82,83, 0},\
-{ 0, 0, 0, 0, 0, 0, 0, 0},\
-{ 0, 0, 0, 0, 0, 0, 0, 0},\
-{ 0, 0, 0, 0, 0,86,87,95},\
-{ 0, 0, 0, 0, 0, 0, 0, 0},\
-{ 0, 0, 0, 0, 0, 0, 0, 0},\
-{ 0, 0, 0, 0, 0, 0, 0, 0},\
-{94,85,92,93, 0, 0, 0, 0},\
-{ 0, 0, 0, 0, 0, 0, 0, 0}};
-
-uint8_t KeyDataTable[] =             /* Unshifted ASCII for scan codes */
+uint8_t KeyDataTable[] =
 {
-/*	 0   1   2   3   4   5   6   7 */
-	 0,  0, '1','2','3','4','5','6',/*  8 */
-	'7','8','9','0','-','^','@', 0, /* 16 */
-	'q','w','e','r','t','y','u','i',/* 24 */
-	'o','p','[',']', 0,  0, 'a','s',/* 32 */ 
-	'd','f','g','h','j','k','l',';',/* 40 */
-	':','`', 0,  0, 'z','x','c','v',/* 48 */
-	'b','n','m',',','.','/', 0, '*',/* 56 */
-	 0, ' ', 0,  0,  0,  0,  0,  0, /* 64 */
-	 0,  0,  0,  0,  0,  0,  0,  0, /* 72 */
-	 0,  0,  0,  0,  0,  0,  0,  0, /* 80 */
-	 KEYD_LEFT,KEYD_UP,KEYD_RIGHT,KEYD_DOWN,KEYD_A,KEYD_B,KEYD_L,KEYD_R,  /* 88 */
-	 KEYD_START,KEYD_SELECT,KEYD_MINUS,KEYD_PLUS,KEYD_BRACKET_LEFT,KEYD_BRACKET_RIGHT,KEYD_SPEED,KEYD_STRAFE,  /* 96*/
+	0,KEYD_START,'1','2','3','4','5','6',	  			/* 0x00-0x07 */
+	'7','8','9','0','-','^','\\',0,  				/* 0x08-0x0F */
+	KEYD_SELECT,'q','w','e','r','t','y','u',    			/* 0x10-0x17 */
+	'i','o','p','@',KEYD_BRACKET_LEFT,KEYD_A,'a','s', 		/* 0x18-0x1F */
+	'd','f','g','h','j','k','l',';',	  			/* 0x20-0x27 */
+	':',KEYD_BRACKET_RIGHT,'z','x','c','v','b','n',	  		/* 0x28-0x2F */
+	'm',KEYD_L,KEYD_R,'/','_',KEYD_A,0,0,				/* 0x30-0x37 */
+	KEYD_PLUS,KEYD_MINUS,0,KEYD_LEFT,KEYD_UP,KEYD_RIGHT,KEYD_DOWN,0,/* 0x38-0x3F */
+	0,0,0,0,0,0,0,0,						/* 0x40-0x47 */
+	0,0,0,0,0,0,0,0,						/* 0x48-0x4F */
+	0,0,0,0,0,KEYD_L,KEYD_R,KEYD_STRAFE,				/* 0x50-0x57 */
+	0,0,0,0,0,0,0,0,						/* 0x58-0x5F */
+	0,0,0,0,0,0,0,0,	  					/* 0x60-0x67 */
+	0,0,0,0,0,0,0,0,	  					/* 0x68-0x6F */
+	KEYD_SPEED,KEYD_B,KEYD_BRACKET_LEFT,KEYD_BRACKET_RIGHT,0,0,0,0,	/* 0x70-0x77 */
+	0,0,0,0,0,0,0,0		  					/* 0x78-0x7F */
 };
 
-static uint8_t oldkeystate[96];
+static uint8_t oldkeystate[128];
 
 static boolean isKeyboardIsrSet = false;
 
@@ -116,33 +98,31 @@ void I_InitKeyboard(void)
 {
 	isKeyboardIsrSet = true;
 
-	memset(oldkeystate, 0, 96);
+	memset(oldkeystate, 0, 128);
 }
 
 
 void I_StartTic(void)
 {
 	uint8_t key;
-	uint8_t tempkey[96];	
+	uint8_t tempkey[128];
 	uint8_t i;
 	d_event_t event;
-
-	memset(tempkey, 0, 96);
 
 	for(i=0;i<16;i++)
 	{
 		key = BITSNS(i);
-		tempkey[X68XlatTable[i][0]] = (key & 1) ? 1 : 0;
-		tempkey[X68XlatTable[i][1]] = (key & 2) ? 1 : 0;
-		tempkey[X68XlatTable[i][2]] = (key & 4) ? 1 : 0;
-		tempkey[X68XlatTable[i][3]] = (key & 8) ? 1 : 0;
-		tempkey[X68XlatTable[i][4]] = (key &16) ? 1 : 0;
-		tempkey[X68XlatTable[i][5]] = (key &32) ? 1 : 0;
-		tempkey[X68XlatTable[i][6]] = (key &64) ? 1 : 0;
-		tempkey[X68XlatTable[i][7]] = (key&128) ? 1 : 0;
+		tempkey[(i * 8)    ] = (key & 1) ? 1 : 0;
+		tempkey[(i * 8) + 1] = (key & 2) ? 1 : 0;
+		tempkey[(i * 8) + 2] = (key & 4) ? 1 : 0;
+		tempkey[(i * 8) + 3] = (key & 8) ? 1 : 0;
+		tempkey[(i * 8) + 4] = (key &16) ? 1 : 0;
+		tempkey[(i * 8) + 5] = (key &32) ? 1 : 0;
+		tempkey[(i * 8) + 6] = (key &64) ? 1 : 0;
+		tempkey[(i * 8) + 7] = (key&128) ? 1 : 0;
 	}
 
-	for (i=0; i<96; i++)
+	for(i=0;i<128;i++)
 	{
 		if(tempkey[i] != oldkeystate[i])
 		{
@@ -153,7 +133,7 @@ void I_StartTic(void)
 		}
 	}
 
-	memcpy(oldkeystate,tempkey,96);
+	memcpy(oldkeystate,tempkey,128);
 }
 
 
@@ -315,7 +295,7 @@ int32_t I_GetTime(void)
 
 void I_InitTimer(void)
 {
-	// 140hz = about 7412us, but Timer-D on X68000 can't match that period accurately.
+	// 140hz = about 7142us, but Timer-D on X68000 can't match that period accurately.
 	// Mode 7 = 50us, 50 * 143 = 7150us (139hz)
 	TIMERDST((byte *)Timer_D_Function, 7, 143);
 	isTimerSet = true;
@@ -324,7 +304,7 @@ void I_InitTimer(void)
 
 static void I_ShutdownTimer(void)
 {
-	TIMERDST((byte *)Timer_D_Function, 0, 0);
+	TIMERDST((byte *)0, 0, 0);
 }
 
 
@@ -373,6 +353,12 @@ static void I_Shutdown(void)
 	if (isGraphicsModeSet)
 	{
 		I_ShutdownGraphics();
+		__asm__ volatile ("subq.l #8,sp\n"
+                  "move.l sp,usp\n"
+		  "addq.l #4,sp\n"
+		  "move.l %0,(sp)\n"
+		  "jsr (%1)\n"
+		  "addq.l #4,sp" :: "d"(ssp), "a"(B_SUPER));
 	}
 
 	I_ShutdownSound();
