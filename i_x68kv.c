@@ -206,7 +206,7 @@ static const uint16_t colors[14] =
 
 static void I_UploadNewPalette(int8_t pal)
 {
-	uint16_t r, g, b;
+	uint8_t r, g, b;
 	// This is used to replace the current 256 colour cmap with a new one
 	// Used by 256 colour PseudoColor modes
 
@@ -403,8 +403,17 @@ void I_FinishViewWindow(void)
 }
 
 
+union reg
+{
+	unsigned char b[2];
+	unsigned short w;
+};
+
+
 void R_DrawColumnSprite(const draw_column_vars_t *dcvars)
 {
+	union reg pix;
+
 	int16_t count = (dcvars->yh - dcvars->yl) + 1;
 
 	// Zero length, column does not exceed a pixel.
@@ -427,44 +436,44 @@ void R_DrawColumnSprite(const draw_column_vars_t *dcvars)
 	int16_t l = count >> 4;
 	while (l--)
 	{
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
 
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
 
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
 
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
 	}
 
 	switch (count & 15)
 	{
-		case 15: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case 14: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case 13: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case 12: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case 11: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case 10: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  9: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  8: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  7: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  6: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  5: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  4: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  3: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  2: dest[0] = dest[1] = colmap[src[frac >> COLBITS]]; dest += GVRAMWIDTH; frac += fracstep;
-		case  1: dest[0] = dest[1] = colmap[src[frac >> COLBITS]];
+		case 15: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 14: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 13: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 12: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 11: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 10: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  9: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  8: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  7: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  6: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  5: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  4: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  3: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  2: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  1: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w;
 	}
 }
 
@@ -486,7 +495,7 @@ void R_DrawColumnFlat(uint8_t color, const draw_column_vars_t *dcvars)
 	// Optimize with 32bit move
 	uint32_t *dest = (uint32_t *)_d_screen;
 	dest += dcvars->x + dcvars->yl * GVRAMWIDTH_2;
-	uint32_t c32 = (color <<16) | color;
+	const uint32_t c32 = (color <<16) | color;
 
 	uint16_t l = count >> 4;
 
@@ -604,6 +613,8 @@ static const int16_t fuzzoffset[FUZZTABLE] =
 //
 void R_DrawFuzzColumn(const draw_column_vars_t *dcvars)
 {
+	union reg pix;
+
 	int16_t dc_yl = dcvars->yl;
 	int16_t dc_yh = dcvars->yh;
 
@@ -629,7 +640,8 @@ void R_DrawFuzzColumn(const draw_column_vars_t *dcvars)
 
 	do
 	{
-		dest[0] = dest[1] = colmap[dest[fuzzoffset[fuzzpos] * 2]];
+		pix.b[1] = colmap[dest[fuzzoffset[fuzzpos] * 2]];
+		dest[0] = dest[1] = pix.w;
 		dest += GVRAMWIDTH;
 
 		fuzzpos++;
@@ -666,6 +678,8 @@ void V_ShutdownDrawLine(void)
 
 void V_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
 {
+	union reg pix;
+
 	int16_t dx = abs(x1 - x0);
 	int16_t sx = x0 < x1 ? 1 : -1;
 
@@ -674,12 +688,13 @@ void V_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
 	int16_t err = dx + dy;
 
 	uint16_t *dst = &_d_screen[y0 * GVRAMWIDTH];
+	pix.b[1] = color;
 
 	if(y0 < y1)
 	{
 		while (true)
 		{
-			dst[x0] = color;
+			dst[x0] = pix.w;
 
 			if (x0 == x1 && y0 == y1)
 				break;
@@ -704,7 +719,7 @@ void V_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
 	{
 		while (true)
 		{
-			dst[x0] = color;
+			dst[x0] = pix.w;
 
 			if (x0 == x1 && y0 == y1)
 				break;
@@ -730,6 +745,8 @@ void V_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
 
 void V_DrawBackground(int16_t backgroundnum)
 {
+	union reg pix;
+
 	/* erase the entire screen to a tiled background */
 	const byte *src = W_GetLumpByNum(backgroundnum);
 
@@ -747,7 +764,8 @@ void V_DrawBackground(int16_t backgroundnum)
 
 			while(len--)
 			{
-				*d++ = *s++;
+				pix.b[1] = *s++;
+				*d++ = pix.w;
 			}
 		}
 	}
@@ -758,6 +776,8 @@ void V_DrawBackground(int16_t backgroundnum)
 
 void V_DrawRaw(int16_t num, uint16_t offset)
 {
+	union reg pix;
+
 	uint16_t *dest = &_d_screen[(offset / SCREENWIDTH) * GVRAMWIDTH];
 	const uint8_t *lump = W_TryGetLumpByNum(num);
 
@@ -768,7 +788,8 @@ void V_DrawRaw(int16_t num, uint16_t offset)
 		{
 			for(int i = 0; i < SCREENWIDTH; i++)
 			{
-				*dest++ = *lump++;
+				pix.b[1] = *lump++;
+				*dest++ = pix.w;
 			}
 			dest += GVRAMWIDTH - SCREENWIDTH;
 			lumpLength-=SCREENWIDTH;
@@ -791,6 +812,8 @@ void ST_Drawer(void)
 
 void V_DrawPatchNotScaled(int16_t x, int16_t y, const patch_t __far* patch)
 {
+	union reg pix;
+
 	y -= patch->topoffset;
 	x -= patch->leftoffset;
 
@@ -812,17 +835,19 @@ void V_DrawPatchNotScaled(int16_t x, int16_t y, const patch_t __far* patch)
 
 			switch(count)
 			{
-				case 7: *dest = *source++; dest += GVRAMWIDTH;
-				case 6: *dest = *source++; dest += GVRAMWIDTH;
-				case 5: *dest = *source++; dest += GVRAMWIDTH;
-				case 4: *dest = *source++; dest += GVRAMWIDTH;
-				case 3: *dest = *source++; dest += GVRAMWIDTH;
-				case 2: *dest = *source++; dest += GVRAMWIDTH;
-				case 1: *dest = *source++; break;
+				case 7: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 6: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 5: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 4: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 3: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 2: pix.b[1] = *source++; *dest = pix.w; dest += GVRAMWIDTH;
+				case 1: pix.b[1] = *source++; *dest = pix.w; break;
 				default:
 				while (count--)
 				{
-					*dest = *source++; dest += GVRAMWIDTH;
+					pix.b[1] = *source++;
+					*dest = pix.w;
+					dest += GVRAMWIDTH;
 				}
 			}
 
@@ -834,6 +859,8 @@ void V_DrawPatchNotScaled(int16_t x, int16_t y, const patch_t __far* patch)
 
 void V_DrawPatchScaled(int16_t x, int16_t y, const patch_t __far* patch)
 {
+	union reg pix;
+
 	static const int32_t   DX  = (((int32_t)SCREENWIDTH)<<FRACBITS) / SCREENWIDTH_VGA;
 	static const int16_t   DXI = ((((int32_t)SCREENWIDTH_VGA)<<FRACBITS) / SCREENWIDTH) >> 8;
 	static const int32_t   DY  = ((((int32_t)SCREENHEIGHT)<<FRACBITS)+(FRACUNIT-1)) / SCREENHEIGHT_VGA;
@@ -876,7 +903,8 @@ void V_DrawPatchScaled(int16_t x, int16_t y, const patch_t __far* patch)
 			int16_t count = dc_yh - dc_yl;
 			while (count--)
 			{
-				*dest = source[frac >> 8];
+				pix.b[1] = source[frac >> 8];
+				*dest = pix.w;
 				dest += GVRAMWIDTH;
 				frac += DYI;
 			}
