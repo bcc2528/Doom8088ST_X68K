@@ -409,7 +409,6 @@ union reg
 	unsigned short w;
 };
 
-
 void R_DrawColumnSprite(const draw_column_vars_t *dcvars)
 {
 	union reg pix;
@@ -457,23 +456,32 @@ void R_DrawColumnSprite(const draw_column_vars_t *dcvars)
 		pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
 	}
 
+	// Optimization for m68k GCC.
+	// Even with the O2 option enabled, the compiler creates the `moveq` instructions
+	// before the `lsr` instructions in every `case` statement.
+	unsigned int col_shift; //col_shift = COLBITS
+	__asm__ volatile(
+		"moveq   #9, %0\n": "=r"(col_shift)
+    		: "r"(col_shift)
+    		: "cc", "memory");
+
 	switch (count & 15)
 	{
-		case 15: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case 14: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case 13: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case 12: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case 11: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case 10: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  9: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  8: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  7: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  6: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  5: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  4: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  3: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  2: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
-		case  1: pix.b[1] = colmap[src[frac >> COLBITS]]; dest[0] = dest[1] = pix.w;
+		case 15: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 14: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 13: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 12: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 11: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case 10: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  9: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  8: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  7: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  6: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  5: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  4: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  3: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  2: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w; dest += GVRAMWIDTH; frac += fracstep;
+		case  1: pix.b[1] = colmap[src[frac >> col_shift]]; dest[0] = dest[1] = pix.w;
 	}
 }
 
@@ -927,7 +935,6 @@ static boolean wipe_ScreenWipe(int16_t ticks)
 
 	while (ticks--)
 	{
-		I_DrawBuffer(frontbuffer);
 		for (int16_t i = 0; i < SCREENWIDTH / 2; i++)
 		{
 			if (wipe_y_lookup[i] < 0)
@@ -982,6 +989,8 @@ static boolean wipe_ScreenWipe(int16_t ticks)
 			}
 		}
 	}
+
+	I_DrawBuffer(frontbuffer);
 
 	return done;
 }

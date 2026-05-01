@@ -89,7 +89,7 @@ uint8_t KeyDataTable[] =
 	0,0,0,0,0,0,0,0		  					/* 0x78-0x7F */
 };
 
-static uint8_t oldkeystate[128];
+static uint8_t oldkeystate[120];
 
 static boolean isKeyboardIsrSet = false;
 
@@ -98,31 +98,31 @@ void I_InitKeyboard(void)
 {
 	isKeyboardIsrSet = true;
 
-	memset(oldkeystate, 0, 128);
+	memset(oldkeystate, 0, 120);
 }
 
 
 void I_StartTic(void)
 {
 	uint8_t key;
-	uint8_t tempkey[128];
+	uint8_t tempkey[120];
 	uint8_t i;
 	d_event_t event;
 
-	for(i=0;i<16;i++)
+	for(i=0;i<15;i++)
 	{
 		key = BITSNS(i);
-		tempkey[(i * 8)    ] = (key & 1) ? 1 : 0;
-		tempkey[(i * 8) + 1] = (key & 2) ? 1 : 0;
-		tempkey[(i * 8) + 2] = (key & 4) ? 1 : 0;
-		tempkey[(i * 8) + 3] = (key & 8) ? 1 : 0;
-		tempkey[(i * 8) + 4] = (key &16) ? 1 : 0;
-		tempkey[(i * 8) + 5] = (key &32) ? 1 : 0;
-		tempkey[(i * 8) + 6] = (key &64) ? 1 : 0;
-		tempkey[(i * 8) + 7] = (key&128) ? 1 : 0;
+		tempkey[(i * 8)    ] = (key & 1);
+		tempkey[(i * 8) + 1] = (key & 2);
+		tempkey[(i * 8) + 2] = (key & 4);
+		tempkey[(i * 8) + 3] = (key & 8);
+		tempkey[(i * 8) + 4] = (key &16);
+		tempkey[(i * 8) + 5] = (key &32);
+		tempkey[(i * 8) + 6] = (key &64);
+		tempkey[(i * 8) + 7] = (key&128);
 	}
 
-	for(i=0;i<128;i++)
+	for(i=0;i<120;i++)
 	{
 		if(tempkey[i] != oldkeystate[i])
 		{
@@ -133,7 +133,7 @@ void I_StartTic(void)
 		}
 	}
 
-	memcpy(oldkeystate,tempkey,128);
+	memcpy(oldkeystate,tempkey,120);
 }
 
 
