@@ -311,10 +311,8 @@ void I_InitGraphicsHardwareSpecificCode(void)
 	/* 8x8 31khz BGn*/
 	/**cynthia_res = 0x10;*/
 	
-	/* disable soft mouse stuff (right click)*/
-	//_iocs_tgusemd(1, 2);
-	//_iocs_tgusemd(0, 2);
 	C_CUROFF();
+	SKEY_MOD(0, 0, 0);
 	
 	memset(gvram[0], 0x0, 0x100000);	/* clear all gvram*/
 	/* set GVRAM1 layers visible*/
@@ -331,6 +329,7 @@ void I_ShutdownGraphics(void)
 {
 	CRTMOD(crt_mode);
 	C_CURON();
+	SKEY_MOD(-1, 0, 0);
 }
 
 
